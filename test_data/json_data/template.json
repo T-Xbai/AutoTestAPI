@@ -10,14 +10,25 @@
         "field_01",
         "field_02"
       ]
-    },{
+    },
+    {
       "login_02": [
         "field_01",
         "field_02"
       ]
     }
   ],
-  "body": {"username": "13681950786","password": "123456"},
-  
-
+  "body": {
+    "username": "13681950786",
+    "password": "123456"
+  },
+  "assert": {
+    "code": "200",
+    "username": "13681950786",
+    "mes": "contains(\"hello\")"
+  },
+  "after": {
+    "file": "../json_data/template.json",
+    "sql": "select * from user;"
+  }
 }
