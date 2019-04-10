@@ -2,18 +2,20 @@
 import os
 
 
-class FileUtil:
-    def getCatalogFilePath(self, catalog=None):
-        file_paths = []
+def getCatalogFilePath( catalog=None):
+    file_paths = []
 
-        if catalog is None:
-            catalog = "../test_data"
+    if catalog is None:
+        catalog = "../test_data"
 
-        for root, dirs, files in os.walk(catalog):
-            for file in files:
-                file_paths.append(root + '\\' + file)
-        return file_paths
+    for root, dirs, files in os.walk(catalog):
+        for file in files:
+            file_paths.append(root + '\\' + file)
+    return file_paths
 
-# if __name__ == '__main__':
-#     paths = getCatalogFilePath()
-#     print(paths)
+
+
+
+if __name__ == '__main__':
+    paths = getCatalogFilePath()
+    print(paths)
