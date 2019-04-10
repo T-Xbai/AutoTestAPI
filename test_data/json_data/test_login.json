@@ -1,0 +1,21 @@
+{
+  "url": "https://www.taruiyun.com/api/login",
+  "method": "POST",
+  "headers": {
+    "content-type": "application/json"
+  },
+  "rely_case": null,
+  "body": {
+    "username":"13681950785",
+    "password":"12345"
+  },
+  "assert": {
+    "code": "200",
+    "username": "13681950786",
+    "mes": "contains(\"hello\")"
+  },
+  "after": {
+    "file": "../json_data/template.json",
+    "sql": "select * from user;"
+  }
+}

@@ -69,12 +69,3 @@ class RequestMethodUtil:
         return _result
 
 
-if __name__ == '__main__':
-    res = RequestMethodUtil()
-    result = res.run(
-        method='post',
-        url='https://www.taruiyun.com/api/login',
-        headers={'content-type': 'application/json'},
-        body={"username": "13681950785", "password": "123456"}
-    )
-    print(result.request)
