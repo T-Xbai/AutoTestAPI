@@ -5,6 +5,9 @@ from requests import Response
 
 
 class ResponseOper:
+    """
+    响应结果处理类
+    """
 
     def __init__(self, response: Response):
         response.encoding = 'utf-8'
@@ -16,6 +19,11 @@ class ResponseOper:
         self.request_url = response.url
 
     def get_rely_fields_value(self, fields: list):
+        """
+        获取依赖字段的值
+        :param fields: 依赖字段
+        :return: 字段值
+        """
         if fields == 'null' or len(fields) < 1:
             raise Exception("依赖字段的不得为空: %r" % fields)
         bodys = {}
@@ -26,17 +34,16 @@ class ResponseOper:
                 raise Exception("响应文本内找不到该依赖字段： %r" % field)
         return bodys
 
-
 # if __name__ == '__main__':
 #     from oper.request_oper import RequestOper
 #
 #     re = RequestOper("test_login.json")
 #     result = re.case_run()
 #     response = ResponseOper(result)
-    # print(response.code)
-    # print(type(response.body))
-    # print(type(response.json))
-    # print(response.json)
-    # print(response.body)
-    # rely_field_values = response.get_rely_fields_value([])
-    # print(rely_field_values)
+# print(response.code)
+# print(type(response.body))
+# print(type(response.json))
+# print(response.json)
+# print(response.body)
+# rely_field_values = response.get_rely_fields_value([])
+# print(rely_field_values)

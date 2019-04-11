@@ -2,7 +2,7 @@
 import os
 
 
-def getCatalogFilePath(catalog=None):
+def get_catalog_file_path(catalog=None):
     """
     获取目录下的所有文件的路径
     :param catalog: 目录位置
@@ -11,9 +11,11 @@ def getCatalogFilePath(catalog=None):
     file_paths = []
 
     if catalog is None:
-        catalog = "../test_data"
+        catalog = "../test_data/case_data"
 
     for root, dirs, files in os.walk(catalog):
         for file in files:
-            file_paths.append(root + '\\' + file)
+            file_format = file.split('.')[1]
+            if file_format == 'xlsx':
+                file_paths.append(root + '\\' + file)
     return file_paths

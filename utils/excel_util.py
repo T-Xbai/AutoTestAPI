@@ -40,13 +40,12 @@ class ExcelUtil:
                         column_index += 1
                     rows.append(case_data)
                     row_index += 1
-            case_datas[title] = rows
+                case_datas[title] = rows
         return case_datas
 
     # def get_case_number_by_row(self, case_number: str):
     #     case_datas = self.getExcelData()
     #     for
-
 
     def getConfig(self):
         """
