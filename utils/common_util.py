@@ -2,7 +2,6 @@
 
 import os
 
-
 def get_catalog_file_path(catalog=None):
     """
     获取目录下的所有文件的路径
@@ -20,7 +19,4 @@ def get_catalog_file_path(catalog=None):
             if file_format == 'xlsx':
                 file_paths.append(root + '\\' + file)
     return file_paths
-
-
-
 

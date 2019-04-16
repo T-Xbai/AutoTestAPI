@@ -4,6 +4,10 @@ import pymysql
 
 
 class MysqlUtil:
+    """
+    Mysql 的操作基类
+    """
+
 
     def __init__(self, host, user, password, database):
         self.db = pymysql.connect(host=host, user=user, password=password, database=database)

@@ -3,9 +3,17 @@ from pymongo import MongoClient
 
 
 class MongoUtil:
+    """
+    Mongo 的操作基类
+    """
 
-    def __init__(self, host, port, database):
-        self.client = MongoClient(host=host, port=port)
+    def __init__(self, host: str, username, password, database, ssl=None):
+        if host is None or host.lower() == 'null' \
+                or host == '':
+            self.client = MongoClient(ssl)
+        else:
+            self.client = MongoClient(host=host, username=username, password=password)
+
         try:
             self.db = self.client[database]
         except KeyError:
