@@ -63,9 +63,7 @@ class RequestMethodUtil:
         elif method == 'post':
             _result = self.__post(url=url, headers=headers, body=body)
         elif method == 'put':
-            _result = self.__put(url=url, headers=headers)
+            _result = self.__put(url=url, headers=headers, body=body)
         elif method == 'del' or method == 'delete':
             _result = self.__del(url=url)
         return _result
-
-

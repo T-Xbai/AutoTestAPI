@@ -1,14 +1,9 @@
 {
-  "url": "https://www.taruiyun.com/api/login",
-  "method": "POST",
-  "headers": {
-    "content-type": "application/json"
-  },
+  "url": "{{ test_url }}/user-center/user/account?account=13681950788&_=1556160243360",
+  "method": "GET",
+  "headers": null,
   "rely_case": null,
-  "body": {
-    "username":"13681950785",
-    "password":"12345"
-  },
+  "body": null,
   "assert": {
     "code": "200",
     "username": "13681950786",

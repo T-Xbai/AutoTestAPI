@@ -9,8 +9,9 @@ class ExcelUtil:
 
     _wb = None
     CONFIG = 'Config'
+    FILE_PATH = '../test_data/case_data/test_case.xlsx'
 
-    def __init__(self, filename: str):
+    def __init__(self, filename: str = FILE_PATH):
         self._wb = load_workbook(filename=filename)
 
     def getExcelData(self):
@@ -80,10 +81,3 @@ class ExcelUtil:
 
     def cell(self, sheet, r_col, c_col):
         return sheet.cell(row=r_col, column=c_col).value
-
-
-if __name__ == '__main__':
-    excel = ExcelUtil('../test_data/登录接口_test.xlsx')
-    datas = excel.getExcelData()
-    # datas = excel.get_case_number_by_row('Sheet1/qa_1_value_111')
-    print(datas)

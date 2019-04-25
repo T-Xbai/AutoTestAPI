@@ -6,16 +6,27 @@ import re
 
 class DatabaseOper:
 
-    def __init__(self, database_type: str, database_name, host=None, username=None, password=None, ssl=None):
+    def __init__(self, data_config: dict):
+        self.database_type = data_config['database_type'].lower()
+        host = data_config['host']
+        username = data_config['username']
+        password = data_config['password']
+        database_name = data_config['database_name']
 
-        self.database_type = database_type.lower()
         if self.database_type == 'mysql':
             self.db = MysqlUtil(
-                host=host, user=username, password=password, database=database_name
+                host=host,
+                user=username,
+                password=password,
+                database=database_name
             )
 
         elif self.database_type == "mongo":
-            self.db = MongoUtil(host=host, username=username, password=password, database=database_name, ssl=ssl)
+            try:
+                ssh = data_config['ssh']
+                self.db = MongoUtil(database=database_name, ssl=ssh)
+            except KeyError:
+                self.db = MongoUtil(database=database_name, host=host, username=username, password=password)
 
     def run_sql(self, sql: str):
         """
@@ -66,12 +77,12 @@ class DatabaseOper:
         obj = re.match(r"(.*):(.*)\(({.*})|({.*}),({.*})\)$", sql, re.M | re.I)
         return obj.groups()
 
-
-if __name__ == '__main__':
-    database = DatabaseOper(
-        database_type='mongo',
-        database_name='ch_node',
-        ssl='mongodb://root:Hifox2017@dds-uf6cd3ffc59e27e41237-pub.mongodb.rds.aliyuncs.com:3717,dds-uf6cd3ffc59e27e42404-pub.mongodb.rds.aliyuncs.com:3717/admin?replicaSet=mgset-3162811&authSource=admin'
-    )
-    sql = 'F_User:update_one({"phone":"136819507856"},{"$set":{"phone":"13681950785"}})'
-    database.run_sql(sql)
+#
+# if __name__ == '__main__':
+#     database = DatabaseOper(
+#         database_type='mongo',
+#         database_name='ch_node',
+#         ssl='mongodb://root:Hifox2017@dds-uf6cd3ffc59e27e41237-pub.mongodb.rds.aliyuncs.com:3717,dds-uf6cd3ffc59e27e42404-pub.mongodb.rds.aliyuncs.com:3717/admin?replicaSet=mgset-3162811&authSource=admin'
+#     )
+#     sql = 'F_User:update_one({"phone":"136819507856"},{"$set":{"phone":"13681950785"}})'
+#     database.run_sql(sql)

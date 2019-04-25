@@ -1,56 +1,53 @@
-# # -- coding: utf-8 --
+# -- coding: utf-8 --
 import pytest
-
 from oper.database_oper import DatabaseOper
-from utils.common_util import get_catalog_file_path
 from utils.excel_util import ExcelUtil
+from utils.read_json_util import read_json
 
-files = get_catalog_file_path()
+database_oper = None
+excel = None
+excel_cases = []
 
-excel_data = None
-db = None
 
+@pytest.fixture(scope='class', autouse=True)
+def set_up_class():
+    global database_oper, excel, excel_cases
+    file_path = '../test_data/case_data/test_case.xlsx'
+    excel = ExcelUtil(file_path)
+    excel_cases = get_excel_cases(excel.getExcelData())
 
-@pytest.fixture(scope='session', params=files, autouse=True)
-def get_file_datas(request):
-    file = request.param
-    excel = ExcelUtil(file)
     config = excel.getConfig()
-    if config['is_run'].lower() == 'y':
-        db = get_config_data(config)
-        excel_data = excel.getExcelData()
-    else:
-        excel_data = []
+    database_oper = DatabaseOper(data_config=config)
 
 
-
-
-
-def get_config_data(config):
+def get_excel_cases(excel_data: dict):
     """
-    获取 config 数据库连接数据
+    将每个sheet 下面的case整合成一个list
     """
-    database_type = config['database_type']
-    database_name = config['database_name']
-    host = config['host']
-    username = config['username']
-    password = config['password']
-    ssh = config['ssh']
 
-    return DatabaseOper(
-        database_type=database_type,
-        database_name=database_name,
-        host=host,
-        username=username,
-        password=password,
-        ssl=ssh
-    )
+    cases = []
+    for key, value in excel_data.items():
+        cases += value
+    return cases
 
 
+@pytest.mark.usefixtures('set_up_class')
 class TestRun:
 
-    def test_run(self):
-        print('----------------')
+    @pytest.mark.parametrize('case_datas', excel_cases)
+    def test_run(self, case_datas):
+        case_datas
+
+    def run_case(self, case_datas: dict):
+        json_file_name = case_datas['请求数据']
+        request_data = read_json(json_file_name)
+        try:
+            rely_case = request_data['rely_case']
+            if rely_case != 'null':
+
+
+
+        except KeyError:
 
 
 if __name__ == '__main__':

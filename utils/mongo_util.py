@@ -7,17 +7,17 @@ class MongoUtil:
     Mongo 的操作基类
     """
 
-    def __init__(self, host: str, username, password, database, ssl=None):
+    def __init__(self, database:str, host: str = None, username=None, password=None, ssl=None):
         if host is None or host.lower() == 'null' \
                 or host == '':
             self.client = MongoClient(ssl)
         else:
             self.client = MongoClient(host=host, username=username, password=password)
 
-        try:
-            self.db = self.client[database]
-        except KeyError:
-            raise KeyError("Mongo - 没有这个数据库：%s" % database)
+            try:
+                self.db = self.client[database]
+            except KeyError:
+                raise KeyError("Mongo - 没有这个数据库：%s" % database)
 
     def collection(self, collection_name):
         try:

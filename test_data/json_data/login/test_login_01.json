@@ -1,0 +1,23 @@
+{
+  "rely_case": [
+
+  ],
+  "url": "{{ test_url }}/api/login",
+  "method": "POST",
+  "headers": {
+    "content-type": "application/json"
+  },
+  "body": {
+    "username":"13681950785",
+    "password":"12345678"
+  },
+  "assert": {
+    "code": "200",
+    "username": "13681950786",
+    "mes": "contains(\"hello\")"
+  },
+  "after": {
+    "file": "../json_data/template.json",
+    "sql": "select * from projects;"
+  }
+}

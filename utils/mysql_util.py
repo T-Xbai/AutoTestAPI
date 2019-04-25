@@ -1,6 +1,7 @@
 # -- coding: utf-8 --
 
 import pymysql
+from pymysql import OperationalError
 
 
 class MysqlUtil:
@@ -8,10 +9,12 @@ class MysqlUtil:
     Mysql 的操作基类
     """
 
-
     def __init__(self, host, user, password, database):
-        self.db = pymysql.connect(host=host, user=user, password=password, database=database)
-        self.cursor = self.db.cursor()
+        try:
+            self.db = pymysql.connect(host=host, user=user, password=password, database=database)
+            self.cursor = self.db.cursor()
+        except OperationalError :
+            raise OperationalError("无法连接 MySQL 服务")
 
     def execute(self, sql):
         """
@@ -22,9 +25,6 @@ class MysqlUtil:
         self.cursor.execute(sql)
         return self.cursor.fetchall()
 
-
     def __del__(self):
         self.db.commit()
         self.db.close()
-
-

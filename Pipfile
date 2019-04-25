@@ -11,6 +11,8 @@ openpyxl = "*"
 pytest = "*"
 pymysql = "*"
 pymongo = "*"
+unittest = "*"
+ddt = "*"
 
 [requires]
 python_version = "3.7"
