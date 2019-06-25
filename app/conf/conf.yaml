@@ -1,0 +1,7 @@
+url: http://localhost:5000
+
+mysql:
+  username: root
+  password: root
+  host: 47.110.38.252
+  database: auto_port

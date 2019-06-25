@@ -1,0 +1,26 @@
+{
+  "url": "{{ url }}/upload/image",
+  "method": "POST",
+  "headers": null,
+
+  "rely_cases":null,
+
+
+  "body": null,
+  "files": {
+    "file": "1.jpg"
+  },
+
+
+
+  "asserts": {
+    "code": 200,
+    "$.username": "13681950786",
+    "isContains": "hello"
+
+  },
+  "after": {
+    "file": "../json_data/template.json",
+    "sql": "select * from user;"
+  }
+}

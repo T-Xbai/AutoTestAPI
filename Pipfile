@@ -6,13 +6,14 @@ verify_ssl = true
 [dev-packages]
 
 [packages]
-requests = "*"
-openpyxl = "*"
 pytest = "*"
-pymysql = "*"
-pymongo = "*"
-unittest = "*"
 ddt = "*"
+openpyxl = "*"
+pymongo = "*"
+requests = "*"
+pyyaml = "*"
+flask = "*"
+jsonpath = "*"
 
 [requires]
 python_version = "3.7"

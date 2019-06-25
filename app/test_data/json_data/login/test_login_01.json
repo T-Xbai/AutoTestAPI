@@ -1,0 +1,36 @@
+{
+  "url": "{{ url }}/member/butler_login.do",
+  "method": "POST",
+  "headers": {
+    "content-type": "application/json"
+  },
+
+  "rely_cases": [
+    {
+      "case_id": "Login.login_02",
+      "fields": {
+        "username": "$.mobile",
+        "password": "$.password"
+      }
+    }
+  ],
+
+
+  "body":{
+	"mobile":"{{ username }}",
+	"password":"{{ password }}"
+  },
+
+  "files": null,
+
+
+  "asserts": {
+    "code": 200,
+    "$.mess": "密码错误"
+
+  },
+  "after": {
+    "file": "../json_data/template.json",
+    "sql": "select * from user;"
+  }
+}

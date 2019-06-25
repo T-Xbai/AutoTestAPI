@@ -1,0 +1,25 @@
+{
+  "url": "{{ url }}/getUserPassword",
+  "method": "GET",
+  "headers": null,
+  "rely_cases": [
+    {
+      "case_id": "Login.upload_01",
+      "fields": null
+    }
+  ],
+  "body": null,
+  "files": null,
+
+
+  "asserts": {
+    "code": 200,
+    "$.username": "13681950786",
+    "isContains": "hello"
+
+  },
+  "after": {
+    "file": "../json_data/template.json",
+    "sql": "select * from user;"
+  }
+}

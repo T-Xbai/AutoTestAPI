@@ -1,0 +1,44 @@
+{
+  "url": "http://www.baidu.com",
+  "method": "GET",
+  "headers": {
+    "content-type": "application/json"
+  },
+
+  "rely_cases": [
+    {
+      "case_id": "Login.login_01",
+      "fields": {
+        "username": "$.username",
+        "password": "$.password"
+      }
+    },
+    {
+      "case_name": "login_02",
+      "fields": null
+    }
+  ],
+
+
+  "body": {
+    "username": "13681950786",
+    "password": "123456"
+  },
+  "files": {
+      "file1": "../image/image_01.png",
+      "file2": "../image/image_02.png"
+    },
+
+
+
+  "asserts": {
+    "code": 200,
+    "$.username": "13681950786",
+    "isContains": "hello"
+
+  },
+  "after": {
+    "file": "../json_data/template.json",
+    "sql": "select * from user;"
+  }
+}
