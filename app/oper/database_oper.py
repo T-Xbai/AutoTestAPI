@@ -14,6 +14,7 @@ class DatabaseOper:
                 host=data_config['host'],
                 user=data_config['username'],
                 password=data_config['password'],
+                database=databses
             )
 
         elif self.database_type == "mongo":

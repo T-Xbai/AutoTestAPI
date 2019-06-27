@@ -22,24 +22,24 @@ class ReadJsonUtils:
     @property
     def url(self) -> str:
         url = getYaml("url")
-        url = self._keyIsExist('url').replace("{{ url }}", url)
+        url = self.key_is_exist('url').replace("{{ url }}", url)
         return url
 
     @property
     def method(self) -> str:
-        return self._keyIsExist('method')
+        return self.key_is_exist('method')
 
     @property
     def haders(self) -> dict:
-        return self._keyIsExist('headers')
+        return self.key_is_exist('headers')
 
     @property
     def body(self) -> dict:
-        return self._keyIsExist('body')
+        return self.key_is_exist('body')
 
     @property
     def files(self) -> dict:
-        files = self._keyIsExist('files')
+        files = self.key_is_exist('files')
         if files is not None:
             for key, value in files.items():
                 filePath = '../test_data/files/%s' % value
@@ -49,20 +49,19 @@ class ReadJsonUtils:
 
     @property
     def db_config(self) -> dict:
-        return self._keyIsExist('db_config')
-
+        return self.key_is_exist('db_config')
 
     @property
     def rely_cases(self) -> dict:
-        return self._keyIsExist('rely_cases')
+        return self.key_is_exist('rely_cases')
 
     @property
     def asserts(self) -> dict:
-        return self._keyIsExist('asserts')
+        return self.key_is_exist('asserts')
 
     @property
     def after(self) -> dict:
-        return self._keyIsExist('after')
+        return self.key_is_exist('after')
 
     def replaceVariable(self, replace_variable, replace_value):
         variable = "{{ " + replace_variable + " }}"
@@ -72,8 +71,12 @@ class ReadJsonUtils:
         self.jsonValues = eval(jsonValues)
         print(self.jsonValues)
 
-    def _keyIsExist(self, key: str):
+    def key_is_exist(self, key: str, body: dict = None):
+
+        if body is None:
+            body = self.jsonValues
+
         try:
-            return self.jsonValues[key]
+            return body[key]
         except KeyError:
             raise KeyError("文件：%s 中缺少必要 Key: %s" % (self.json_file, key))

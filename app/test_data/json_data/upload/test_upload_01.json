@@ -18,8 +18,6 @@
     "$.user": "is ok"
 
   },
-  "after": {
-    "file": "../json_data/template.json",
-    "sql": "select * from user;"
-  }
+  "db_config": null,
+  "after":null
 }

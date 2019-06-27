@@ -15,11 +15,11 @@ glo.case_datas = ExcelUtil().getExcelData()
 @pytest.mark.parametrize('case', glo.case_datas)
 def test_func(case):
     excelRun = ExcelRunOper(case)
-    if excelRun.IS_RUN.upper() == 'Y':
+    if excelRun.is_run.upper() == 'Y':
         excelRun.dependRun()
         result = excelRun.runCase()
 
-        asserts = excelRun.REQUEST_DATA.asserts
+        asserts = excelRun.request_data.asserts
         if asserts is not None:
             for key, value in asserts.items():
                 if key == 'code':

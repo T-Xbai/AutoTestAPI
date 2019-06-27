@@ -4,7 +4,6 @@
   "headers": {
     "content-type": "application/json"
   },
-
   "rely_cases": [
     {
       "case_id": "Login.login_02",
@@ -14,47 +13,40 @@
       }
     }
   ],
-
-
-  "body":{
-	"mobile":"{{ username }}",
-	"password":"{{ password }}"
+  "body": {
+    "mobile": "{{ username }}",
+    "password": "{{ password }}"
   },
-
   "files": null,
-
-
   "asserts": {
     "code": 200,
-    "$.mess": "密码错误"
-
+    "$.mess": "login successfully"
   },
-  "after":{
+
+  "db_config": {
+    "db_type": "mysql",
+    "username": "root",
+    "password": "root",
+    "host": "47.110.38.252"
+  },
+
+  "after": {
     "variables": {
-        "user_id": "$.id",
-        "user_name": "$.name",
-        "user_key": "^h(*.?)o"
-      },
-    "db": [
+      "project_name": "$.sql"
+    },
+    "executes": [
       {
-        "name": "data_base",
-        "sql": [
-          "select * from User where name = {{ user_name }}",
-          "select * from User where id = {{ user_id }}",
-          "select * from User where key = {{ user_key }}"
-        ]
+        "name": "auto_port",
+        "sql": null
       },
       {
-        "name": "data_base",
+        "name": "auto_port",
         "sql": [
-          "select * from User where name = {{ user_name }}",
-          "select * from User where id = {{ user_id }}",
-          "select * from User where key = {{ user_key }}"
+          "select * from projects where project_name = '{{ project_name }}'",
+          "select * from projects where project_name = '{{ project_name }}'",
+          "select * from projects where project_name = '{{ project_name }}'"
         ]
       }
     ]
   }
-
-
-
 }

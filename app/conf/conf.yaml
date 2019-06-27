@@ -4,6 +4,5 @@ db:
   db_type: mysql
   username: root
   password: root
-  host: 47.110.38.252
-
+  host: 47.110.38.2521
 

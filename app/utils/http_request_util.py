@@ -1,7 +1,8 @@
 # -- coding: utf-8 --
-import requests
+import requests, json
 
 re = requests.Session()
+
 
 class HttpRequestUtils:
     """
@@ -13,13 +14,13 @@ class HttpRequestUtils:
         method = method.upper()
         print("Method : %r" % method)
         print("URL: %r" % url)
+
+        print("Request Data :%s" % kwargs)
         _result = None
         if method == 'GET':
             _result = re.get(url=url, **kwargs)
         elif method == 'POST':
-            print('headers: %r' % kwargs['headers'])
-            # print('body: %r' % kwargs['data'])
-            _result = re.post(url=url,  *args, **kwargs)
+            _result = re.post(url=url, *args, **kwargs)
 
         elif method == 'PUT':
             _result = re.put(url=url, *args, **kwargs)
@@ -38,7 +39,7 @@ if __name__ == '__main__':
     result = re.post(
         url='http://daily.qianou.com/member/butler_login.do',
         data={"mobile": "SDGKA72", "password": "sdg123"},
-        headers={"content-type":"application/json"}
+        headers={"content-type": "application/json"}
     )
 
     print(result.text)

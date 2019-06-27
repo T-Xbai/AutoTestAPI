@@ -6,7 +6,7 @@ app = Flask(__name__)
 
 @app.route('/getUserPassword', methods=["GET"])
 def getUserPassword():
-    return jsonify({"mobile": "SDGKA72", "password": "sdf123"})
+    return jsonify({"mobile": "SDGKA72", "password": "sdg123"})
 
 
 @app.route('/member/butler_login.do', methods=['POST'])
@@ -25,6 +25,7 @@ def butler_login():
     else:
         res_mes["code"] = 200
         res_mes["mess"] = "login successfully"
+        res_mes["sql"] = "jianchuang"
     return jsonify(res_mes)
 
 
