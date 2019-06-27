@@ -18,12 +18,12 @@ class ExcelUtil:
         filename = filename if filename is not None else self.FILE_PATH
         self._wb = load_workbook(filename=filename)
 
-    def getExcelData(self) -> list:
+    def getExcelData(self) -> dict:
         """
         获取 Excel 测试数据
         :return: 用例集合
         """
-        case_datas = {}
+        case_datas = []
         # 遍历工作簿
         for sheet in self.sheets():
             title = sheet.title
@@ -32,7 +32,6 @@ class ExcelUtil:
                 row_index = 2
                 max_row = sheet.max_row
                 # 取所有 row
-                rows = []
                 while row_index <= max_row:
                     column_index = 1
                     max_column = sheet.max_column
@@ -43,9 +42,8 @@ class ExcelUtil:
                         value = self.cell(sheet, row_index, column_index)
                         case_data[key] = value
                         column_index += 1
-                    rows.append(case_data)
+                    case_datas.append(case_data)
                     row_index += 1
-                case_datas[title] = rows
         return case_datas
 
     def getConfig(self):

@@ -29,8 +29,32 @@
     "$.mess": "密码错误"
 
   },
-  "after": {
-    "file": "../json_data/template.json",
-    "sql": "select * from user;"
+  "after":{
+    "variables": {
+        "user_id": "$.id",
+        "user_name": "$.name",
+        "user_key": "^h(*.?)o"
+      },
+    "db": [
+      {
+        "name": "data_base",
+        "sql": [
+          "select * from User where name = {{ user_name }}",
+          "select * from User where id = {{ user_id }}",
+          "select * from User where key = {{ user_key }}"
+        ]
+      },
+      {
+        "name": "data_base",
+        "sql": [
+          "select * from User where name = {{ user_name }}",
+          "select * from User where id = {{ user_id }}",
+          "select * from User where key = {{ user_key }}"
+        ]
+      }
+    ]
   }
+
+
+
 }

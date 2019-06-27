@@ -4,7 +4,6 @@
   "headers": {
     "content-type": "application/json"
   },
-
   "rely_cases": [
     {
       "case_id": "Login.login_01",
@@ -18,27 +17,49 @@
       "fields": null
     }
   ],
-
-
   "body": {
     "username": "13681950786",
     "password": "123456"
   },
   "files": {
-      "file1": "../image/image_01.png",
-      "file2": "../image/image_02.png"
-    },
-
-
-
+    "file1": "../image/image_01.png",
+    "file2": "../image/image_02.png"
+  },
   "asserts": {
     "code": 200,
     "$.username": "13681950786",
     "isContains": "hello"
-
   },
+
+  "db_config": {
+    "db_type": "mysql",
+    "username": "root",
+    "password": "root"
+  },
+
   "after": {
-    "file": "../json_data/template.json",
-    "sql": "select * from user;"
+    "variables": {
+      "user_id": "$.id",
+      "user_name": "$.name",
+      "user_key": "^h(*.?)o"
+    },
+    "execute": [
+      {
+        "name": "data_base",
+        "sql": [
+          "select * from User where name = {{ user_name }}",
+          "select * from User where id = {{ user_id }}",
+          "select * from User where key = {{ user_key }}"
+        ]
+      },
+      {
+        "name": "data_base",
+        "sql": [
+          "select * from User where name = {{ user_name }}",
+          "select * from User where id = {{ user_id }}",
+          "select * from User where key = {{ user_key }}"
+        ]
+      }
+    ]
   }
 }

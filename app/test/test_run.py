@@ -1,57 +1,41 @@
 # -- coding: utf-8 --
+import json
+
 import pytest
-from app.oper import DatabaseOper
+from jsonpath import jsonpath
+from requests import Response
+
 from app.utils.excel_util import ExcelUtil
-from app.utils import read_json
+from app.oper.excel_run_oper import ExcelRunOper
+import app.test.globals as glo
 
-database_oper = None
-excel = None
-excel_cases = []
-
-
-@pytest.fixture(scope='class', autouse=True)
-def set_up_class():
-    global database_oper, excel, excel_cases
-    file_path = '../test_data/case_data/test_case.xlsx'
-    excel = ExcelUtil(file_path)
-    excel_cases = get_excel_cases(excel.getExcelData())
-
-    config = excel.getConfig()
-    database_oper = DatabaseOper(data_config=config)
+glo.case_datas = ExcelUtil().getExcelData()
 
 
-def get_excel_cases(excel_data: dict):
-    """
-    将每个sheet 下面的case整合成一个list
-    """
+@pytest.mark.parametrize('case', glo.case_datas)
+def test_func(case):
+    excelRun = ExcelRunOper(case)
+    if excelRun.IS_RUN.upper() == 'Y':
+        excelRun.dependRun()
+        result = excelRun.runCase()
 
-    cases = []
-    for key, value in excel_data.items():
-        cases += value
-    return cases
-
-
-@pytest.mark.usefixtures('set_up_class')
-class TestRun:
-
-    @pytest.mark.parametrize('case_datas', excel_cases)
-    def test_run(self, case_datas):
-        case_datas
-
-    def run_case(self, case_datas: dict):
-        json_file_name = case_datas['请求数据']
-        request_data = read_json(json_file_name)
-        try:
-            rely_case = request_data['rely_case']
-            if rely_case != 'null':
-
-
-
-        except KeyError:
+        asserts = excelRun.REQUEST_DATA.asserts
+        if asserts is not None:
+            for key, value in asserts.items():
+                if key == 'code':
+                    assert result.status_code == value
+                elif key == 'isContains':
+                    assert value in result.text
+                else:
+                    res_json = json.loads(result.text, encoding='utf-8')
+                    json_values = jsonpath(res_json, key)
+                    if type(json_values) == list:
+                        json_values = json_values[0]
+                    assert json_values == value
 
 
 if __name__ == '__main__':
     pytest.main([
-        '-s',
-        'test_run.py'
+        '--alluredir=../report/allure_results'
+
     ])

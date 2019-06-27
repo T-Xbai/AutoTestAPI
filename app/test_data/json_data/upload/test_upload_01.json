@@ -15,8 +15,7 @@
 
   "asserts": {
     "code": 200,
-    "$.username": "13681950786",
-    "isContains": "hello"
+    "$.user": "is ok"
 
   },
   "after": {

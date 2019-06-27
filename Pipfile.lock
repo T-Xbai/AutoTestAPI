@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "bffd6e489389f1a98d748c8ba5df9b281963b5af3d8c9fb1d8935bcf38972fd0"
+            "sha256": "2774b64a435368fe5991f53763d6daffb55431190b729ef3b99dc9e1492042a2"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -16,6 +16,21 @@
         ]
     },
     "default": {
+        "allure-pytest": {
+            "hashes": [
+                "sha256:a0ecd279d2cc9fb145988b5e4b53cc625a8002575892814038f6c52a38f2c43a",
+                "sha256:bd0f5bae07d7d7c1656c8ad4c680dc4afda6b97659782ae4f0caae67fd0e90cb"
+            ],
+            "index": "pypi",
+            "version": "==2.7.0"
+        },
+        "allure-python-commons": {
+            "hashes": [
+                "sha256:acdc1532486c25cf90bd8eb709214265f74107a865b708f20f4151850f0dc75b",
+                "sha256:b7cce58ca0dee503026bc882621f9de458606d4ec99fbcef01a61a6e1a91a685"
+            ],
+            "version": "==2.7.0"
+        },
         "atomicwrites": {
             "hashes": [
                 "sha256:03472c30eb2c5d1ba9227e4c2ca66ab8287fbfbbda3888aa93dc2e28fc6811b4",
@@ -110,10 +125,10 @@
         },
         "jsonpath": {
             "hashes": [
-                "sha256:260d90f3058b9064ac43024c3d1875dfb46fb962e4958b44cadfdb5b026728fb"
+                "sha256:46d3fd2016cd5b842283d547877a02c418a0fe9aa7a6b0ae344115a2c990fef4"
             ],
             "index": "pypi",
-            "version": "==0.81"
+            "version": "==0.82"
         },
         "markupsafe": {
             "hashes": [
@@ -150,11 +165,11 @@
         },
         "more-itertools": {
             "hashes": [
-                "sha256:2112d2ca570bb7c3e53ea1a35cd5df42bb0fd10c45f0fb97178679c3c03d64c7",
-                "sha256:c3e4748ba1aad8dba30a4886b0b1a2004f9a863837b8654e7059eebf727afa5a"
+                "sha256:3ad685ff8512bf6dc5a8b82ebf73543999b657eded8c11803d9ba6b648986f4d",
+                "sha256:8bb43d1f51ecef60d81854af61a3a880555a14643691cc4b64a6ee269c78f09a"
             ],
             "markers": "python_version > '2.7'",
-            "version": "==7.0.0"
+            "version": "==7.1.0"
         },
         "openpyxl": {
             "hashes": [
@@ -217,6 +232,14 @@
             ],
             "index": "pypi",
             "version": "==3.8.0"
+        },
+        "pymysql": {
+            "hashes": [
+                "sha256:3943fbbbc1e902f41daf7f9165519f140c4451c179380677e6a848587042561a",
+                "sha256:d8c059dcd81dedb85a9f034d5e22dcb4442c0b201908bede99e306d65ea7c8e7"
+            ],
+            "index": "pypi",
+            "version": "==0.9.3"
         },
         "pyparsing": {
             "hashes": [

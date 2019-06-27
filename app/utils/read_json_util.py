@@ -48,6 +48,11 @@ class ReadJsonUtils:
         return files
 
     @property
+    def db_config(self) -> dict:
+        return self._keyIsExist('db_config')
+
+
+    @property
     def rely_cases(self) -> dict:
         return self._keyIsExist('rely_cases')
 

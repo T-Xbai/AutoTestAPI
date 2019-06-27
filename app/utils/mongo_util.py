@@ -19,6 +19,10 @@ class MongoUtil:
             except KeyError:
                 raise KeyError("Mongo - 没有这个数据库：%s" % database)
 
+
+
+
+
     def collection(self, collection_name):
         try:
             self._collection = self.db[collection_name]

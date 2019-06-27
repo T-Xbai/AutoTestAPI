@@ -1,11 +1,14 @@
 # -- coding: utf-8 --
 from requests import Response
 
+from app.oper.database_oper import DatabaseOper
 from app.teamplate.excel_template import *
 from app.utils.http_request_util import HttpRequestUtils as httpRequest
+from app.utils.mysql_util import MysqlUtil
 from app.utils.read_json_util import ReadJsonUtils
 from app.utils.excel_util import ExcelUtil
 from app.exception.execption import FormatError, ExperError
+from app.utils.common_util import getYaml
 from jsonpath import jsonpath
 import json
 
@@ -13,7 +16,10 @@ import json
 class ExcelRunOper:
 
     def __init__(self, row_data: dict):
+        """
 
+        :type row_data: dict
+        """
         self.CASE_NUMBER = row_data[CASE_NUMBER]
         self.TEST_GOAL = row_data[TEST_GOAL]
         self.TEST_PORT = row_data[TEST_PORT]
@@ -92,18 +98,25 @@ class ExcelRunOper:
         resBody = json.loads(resBody)
         variable = {}
         for key, expr in fields.items():
-            value = jsonpath(resBody, expr)
-            if value == False:
-                message = "表达式错误：[%s]  匹配结果为：False" % expr
-                raise ExperError(message)
+            if expr[0:1] == '$.':
+                value = jsonpath(resBody, expr)
+                if value == False:
+                    message = "表达式错误：[%s]  匹配结果为：False" % expr
+                    raise ExperError(message)
 
-            if type(value) == list:
-                value = value[0]
-            variable[key] = value
+                if type(value) == list:
+                    value = value[0]
+                variable[key] = value
+            else:
+                # TODO 正则表达式匹配数据，待完善
+                pass
 
         return variable
 
     def assertExpectedResult(self, result: Response):
+        '''
+        统一断言方法
+        '''
         asserts = self.REQUEST_DATA.asserts
         if asserts is not None:
             for key, value in asserts.items():
@@ -118,18 +131,34 @@ class ExcelRunOper:
                         json_values = json_values[0]
                     assert json_values == value
 
+    def dbExecute(self, database: str):
+        '''
+        根据配置，连接数据库
+        :param database: 数据库名称
+        :return: MysqlUtil
+        '''
+        db_config = self.REQUEST_DATA.db_config
+        if db_config is None:
+            db_config = getYaml('db')
+
+        return DatabaseOper(db_config, database)
+
+    
+
 
 if __name__ == '__main__':
-    row_data = {
-        "用例编号": "login_01",
-        "测试目的": "登录",
-        "测试接口": "/member/butler_login.do",
-        "请求方法": "POST",
-        "请求数据": "login/test_login_01",
-        "是否执行": "Y",
-        "是否通过": None
-    }
-    excelRun = ExcelRunOper(row_data)
-    excelRun.dependRun()
-    result = excelRun.runCase()
-    excelRun.assertExpectedResult(result)
+    # row_data = {
+    #     "用例编号": "login_01",
+    #     "测试目的": "登录",
+    #     "测试接口": "/member/butler_login.do",
+    #     "请求方法": "POST",
+    #     "请求数据": "login/test_login_01",
+    #     "是否执行": "Y",
+    #     "是否通过": None
+    # }
+    # excelRun = ExcelRunOper(row_data)
+    # excelRun.dependRun()
+    # result = excelRun.runCase()
+    # excelRun.assertExpectedResult(result)
+    res = getYaml('db')
+    print(type(res))

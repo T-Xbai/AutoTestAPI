@@ -6,27 +6,18 @@ import re
 
 class DatabaseOper:
 
-    def __init__(self, data_config: dict):
-        self.database_type = data_config['database_type'].lower()
-        host = data_config['host']
-        username = data_config['username']
-        password = data_config['password']
-        database_name = data_config['database_name']
+    def __init__(self, data_config: dict, databses: str):
+        self.db_type = data_config['db_type'].lower()
 
-        if self.database_type == 'mysql':
+        if self.db_type == 'mysql':
             self.db = MysqlUtil(
-                host=host,
-                user=username,
-                password=password,
-                database=database_name
+                host=data_config['host'],
+                user=data_config['username'],
+                password=data_config['password'],
             )
 
         elif self.database_type == "mongo":
-            try:
-                ssh = data_config['ssh']
-                self.db = MongoUtil(database=database_name, ssl=ssh)
-            except KeyError:
-                self.db = MongoUtil(database=database_name, host=host, username=username, password=password)
+            pass
 
     def run_sql(self, sql: str):
         """
@@ -34,50 +25,53 @@ class DatabaseOper:
         :param database_type: 数据库类型
         :param sql: 执行的sql
         """
-        if self.database_type == 'mysql':
-            execute = getattr(self.db, "execute")
-            return execute(sql)
+        if self.db_type == 'mysql':
+            return self.db.execute(sql)
+
+
         elif self.database_type == 'mongo':
+            # TODO 只有需要可以继承mongo数据库
+            pass
+
             # 获取要操作的 集 、方法 、 过滤条件、修改值
-            obj = self.mongo_match_sql(sql)
-            collection_name = obj[0]
-            method = obj[1]
-            handle_sql = eval(obj[2])
-            filter_sql = None
-            set_sql = None
-            if type(handle_sql) == tuple:
-                filter_sql = handle_sql[0]
-                set_sql = handle_sql[1]
-            else:
-                filter_sql = handle_sql
+            # obj = self.mongo_match_sql(sql)
+            # collection_name = obj[0]
+            # method = obj[1]
+            # handle_sql = eval(obj[2])
+            # filter_sql = None
+            # set_sql = None
+            # if type(handle_sql) == tuple:
+            #     filter_sql = handle_sql[0]
+            #     set_sql = handle_sql[1]
+            # else:
+            #     filter_sql = handle_sql
+            #
+            # # 需要操作的 集
+            # collection = getattr(self.db, 'collection')
+            # collection(collection_name)
+            #
+            # # 操作对应的 方法
+            # if hasattr(self.db, method):
+            #     execute = getattr(self.db, method)
+            #     if set_sql is not None:
+            #         return execute(filter_sql, set_sql)
+            #     else:
+            #         return execute(filter_sql)
+            # else:
+            #     raise Exception("找不到该执行方法：%s" % method)
+    #
+    # def mongo_match_sql(self, sql: str):
+    #     """
+    #     使用正则匹配 mongo 的 sql 语句
+    #     :param sql: 固定格式： F_User:update_one({'user':'1111','passwd':'332211'},{'$set':{'phone':'136819111'}})
+    #     集合：方法（{过滤条件},{修改值}）
+    #     :return: 集 ， 方法，过滤条件，修改的值
+    #     """
+    #
+    #     regular = r"(.*):(.*)\(({.*})\)$"
+    #     obj = re.match(r"(.*):(.*)\(({.*})|({.*}),({.*})\)$", sql, re.M | re.I)
+    #     return obj.groups()
 
-            # 需要操作的 集
-            collection = getattr(self.db, 'collection')
-            collection(collection_name)
-
-            # 操作对应的 方法
-            if hasattr(self.db, method):
-                execute = getattr(self.db, method)
-                if set_sql is not None:
-                    return execute(filter_sql, set_sql)
-                else:
-                    return execute(filter_sql)
-            else:
-                raise Exception("找不到该执行方法：%s" % method)
-
-    def mongo_match_sql(self, sql: str):
-        """
-        使用正则匹配 mongo 的 sql 语句
-        :param sql: 固定格式： F_User:update_one({'user':'1111','passwd':'332211'},{'$set':{'phone':'136819111'}})
-        集合：方法（{过滤条件},{修改值}）
-        :return: 集 ， 方法，过滤条件，修改的值
-        """
-
-        regular = r"(.*):(.*)\(({.*})\)$"
-        obj = re.match(r"(.*):(.*)\(({.*})|({.*}),({.*})\)$", sql, re.M | re.I)
-        return obj.groups()
-
-#
 # if __name__ == '__main__':
 #     database = DatabaseOper(
 #         database_type='mongo',

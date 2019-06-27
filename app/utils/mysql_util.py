@@ -13,8 +13,10 @@ class MysqlUtil:
         try:
             self.db = pymysql.connect(host=host, user=user, password=password, database=database)
             self.cursor = self.db.cursor()
-        except OperationalError :
+        except OperationalError:
             raise OperationalError("无法连接 MySQL 服务")
+
+
 
     def execute(self, sql):
         """
@@ -28,3 +30,10 @@ class MysqlUtil:
     def __del__(self):
         self.db.commit()
         self.db.close()
+
+
+if __name__ == '__main__':
+    db = MysqlUtil(host='47.110.38.252', user='root', password='root')
+    db.cursor('auto_port')
+    query_res = db.execute("update projects set project_name='bbbbb和' where project_name='bbbbb'")
+    print(query_res)
