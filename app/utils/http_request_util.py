@@ -12,26 +12,25 @@ class HttpRequestUtils:
     @staticmethod
     def run(method: str, url, *args, **kwargs):
         method = method.upper()
-        print("Method : %r" % method)
-        print("URL: %r" % url)
-
-        print("Request Data :%s" % kwargs)
         _result = None
         if method == 'GET':
             _result = re.get(url=url, **kwargs)
+
         elif method == 'POST':
             _result = re.post(url=url, *args, **kwargs)
 
         elif method == 'PUT':
             _result = re.put(url=url, *args, **kwargs)
+
         elif method == 'DEL' or method == 'DELETE':
             _result = re.delete(url=url, **kwargs)
 
+        elif method == 'OPTION':
+            _result = re.options(url=url,**kwargs)
+
         _result.encoding = 'unicode_escape'
 
-        print("Response text: %r " % _result.text)
 
-        print('----------------------------------------------------')
         return _result
 
 

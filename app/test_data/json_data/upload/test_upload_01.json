@@ -15,7 +15,7 @@
 
   "asserts": {
     "code": 200,
-    "$.user": "is ok"
+    "$.user": "is ok1"
 
   },
   "db_config": null,

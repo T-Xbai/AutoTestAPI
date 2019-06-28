@@ -1,6 +1,22 @@
 # -- coding: utf-8 --
 
-import os, yaml
+import os, yaml, logging as log
+from datetime import datetime
+
+class Log:
+
+    def __init__(self):
+        filename = datetime.utcnow()
+        log.basicConfig(
+            filename='../report/%s.log' % filename,
+            filemode='w',
+            format='%(asctime)s %(name)s %(levelname)s :: %(funcName)s : %(message)s',
+            level=log.DEBUG
+        )
+
+    @property
+    def log(self):
+        return log
 
 
 def get_catalog_file_path(catalog=None):
@@ -22,10 +38,10 @@ def get_catalog_file_path(catalog=None):
     return file_paths
 
 
-def getYaml(key: str, filePath: str = None):
-    if filePath is None:
-        filePath = "../conf/conf.yaml"
+def get_yaml(key: str, file_path: str = None):
+    if file_path is None:
+        file_path = "../conf/conf.yaml"
 
-    with open(filePath, 'rb') as f:
+    with open(file_path, 'rb') as f:
         values = yaml.load(f, Loader=yaml.FullLoader)
         return values.get(key)

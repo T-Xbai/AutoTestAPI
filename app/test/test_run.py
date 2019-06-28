@@ -1,23 +1,27 @@
 # -- coding: utf-8 --
 import json
-
+from json import JSONDecodeError
 import pytest
 from jsonpath import jsonpath
-from requests import Response
-
 from app.utils.excel_util import ExcelUtil
 from app.oper.excel_run_oper import ExcelRunOper
-import app.test.globals as glo
+from app.utils.common_util import Log
+from app.teamplate.excel_template import *
 
-glo.case_datas = ExcelUtil().getExcelData()
+case_datas = ExcelUtil().getExcelData()
+log = Log().log
 
 
-@pytest.mark.parametrize('case', glo.case_datas)
+@pytest.mark.parametrize('case', case_datas)
 def test_func(case):
     excelRun = ExcelRunOper(case)
+
+    log.info(
+        ">>>>>>>>>>>>>>>>>>>>>>>>>>>  run case : %s  <<<<<<<<<<<<<<<<<<<<<<<<<<" %
+        case[CASE_NUMBER])
     if excelRun.is_run.upper() == 'Y':
-        excelRun.dependRun()
-        result = excelRun.runCase()
+        excelRun.depend_run()
+        result = excelRun.run_case()
 
         asserts = excelRun.request_data.asserts
         if asserts is not None:
@@ -27,15 +31,20 @@ def test_func(case):
                 elif key == 'isContains':
                     assert value in result.text
                 else:
-                    res_json = json.loads(result.text, encoding='utf-8')
-                    json_values = jsonpath(res_json, key)
-                    if type(json_values) == list:
-                        json_values = json_values[0]
-                    assert json_values == value
+                    res_body = result.text
+                    practical_res = None
+                    try:
+                        json_body = json.loads(result.text, encoding='utf-8')
+                        practical_res = jsonpath(json_body, key)
+                    except JSONDecodeError:
+                        practical_res = res_body
+
+                    if type(practical_res) == list:
+                        practical_res = practical_res[0]
+                    assert practical_res == value
 
 
 if __name__ == '__main__':
     pytest.main([
         '--alluredir=../report/allure_results'
-
     ])

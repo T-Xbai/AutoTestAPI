@@ -1,16 +1,17 @@
 # -- coding: utf-8 --
-import json
+import json, re
 
 from jsonpath import jsonpath
 from requests import Response
-
 from app.exception.execption import FormatError, ExperError
 from app.oper.database_oper import DatabaseOper
 from app.teamplate.excel_template import *
-from app.utils.common_util import getYaml
+from app.utils.common_util import get_yaml, Log
 from app.utils.excel_util import ExcelUtil
 from app.utils.http_request_util import HttpRequestUtils as httpRequest
 from app.utils.read_json_util import ReadJsonUtils
+
+log = Log().log
 
 
 class ExcelRunOper:
@@ -27,42 +28,58 @@ class ExcelRunOper:
         self.is_run = row_data[IS_RUN]
         self.is_pass = row_data[IS_PASS]
 
-    def runCase(self):
+    def run_case(self):
 
         """
         case 运行，files 不为 null 会优先传入 files 的值
         :return:
         """
 
+        url = self.request_data.url
+        method = self.request_data.method
+        headers = self.request_data.haders
         body = self.request_data.body
         files = self.request_data.files
 
-        result = None
+        log.info("--------------  Start Request   --------------")
+        log.info("Request URL : %s" % url)
+        log.info("Request Method : %s" % method)
+        log.info("Request Headers : %s" % headers)
+        log.info("Request Body : %s" % body)
+        log.info("Request files : %s" % files)
+
+        _result = None
         if files is not None:
-            result = httpRequest.run(
-                method=self.request_data.method,
-                url=self.request_data.url,
+            _result = httpRequest.run(
+                method=method,
+                url=url,
                 files=files,
-                headers=self.request_data.haders
+                headers=headers
             )
         else:
             if type(body) == dict:
-                result = httpRequest.run(
-                    method=self.request_data.method,
-                    url=self.request_data.url,
+                _result = httpRequest.run(
+                    method=method,
+                    url=url,
                     json=body,
-                    headers=self.request_data.haders
+                    headers=headers
                 )
             else:
-                result = httpRequest.run(
-                    method=self.request_data.method,
-                    url=self.request_data.url,
+                _result = httpRequest.run(
+                    method=method,
+                    url=url,
                     data=body,
-                    headers=self.request_data.haders
+                    headers=headers
                 )
-        return result
 
-    def dependRun(self):
+        log.info("Response code : %s" % _result.status_code)
+        log.info("Response Headers : %s" % _result.headers)
+        log.info("Response body : %s" % _result.text)
+        log.info("--------------  End Request   --------------\n")
+
+        return _result
+
+    def depend_run(self):
         rely_cases = self.request_data.rely_cases
         if not rely_cases is None:
             for rely_case in rely_cases:
@@ -77,30 +94,31 @@ class ExcelRunOper:
                 except ValueError:
                     raise FormatError("key ：case_id 的值格式不正确 %r" % case_id)
 
-                excelRun = ExcelRunOper(row)
+                excel_run = ExcelRunOper(row)
                 # 判断依赖的case ，是否还有依赖的case ： 递归
-                if not excelRun.request_data.rely_cases is None: excelRun.dependRun()
-                response = excelRun.runCase()
+                if not excel_run.request_data.rely_cases is None: excel_run.depend_run()
+                response = excel_run.run_case()
 
                 if fields is None:
                     continue
 
                 # 从响应文本中获取值，并替换请求数据
-                variableValues = self.getDependFieldValues(response.text, fields)
+                variableValues = self.get_depend_field_values(response.text,
+                                                              fields)
                 for variable, value in variableValues.items():
-                    self.request_data.replaceVariable(variable, value)
+                    self.request_data.replace_variable(variable, value)
 
-    def getDependFieldValues(self, resBody, fields: dict):
+    def get_depend_field_values(self, res_body, fields: dict):
         """
         获取依赖字段的值
-        :param resBody: 响应信息
+        :param res_body: 响应信息
         :param fields: 依赖字段
         """
-        resBody = json.loads(resBody)
+        res_body = json.loads(res_body)
         variable = {}
         for key, expr in fields.items():
             if expr[0:2] == '$.':
-                value = jsonpath(resBody, expr)
+                value = jsonpath(res_body, expr)
                 if value == False:
                     message = "表达式错误：[%s]  匹配结果为：False" % expr
                     raise ExperError(message)
@@ -109,12 +127,12 @@ class ExcelRunOper:
                     value = value[0]
                 variable[key] = value
             else:
-                # TODO 正则表达式匹配数据，待完善
-                pass
+                value = re.search(expr, res_body, re.M | re.I)
+                variable[key] = value.group(1)
 
         return variable
 
-    def assertExpectedResult(self, result: Response):
+    def assert_expected_result(self, result: Response):
         """
         统一断言方法
         """
@@ -132,7 +150,7 @@ class ExcelRunOper:
                         json_values = json_values[0]
                     assert json_values == value
 
-    def dbExecute(self, database: str):
+    def db_execute(self, database: str):
         """
         根据配置，连接数据库
         :param database: 数据库名称
@@ -140,7 +158,7 @@ class ExcelRunOper:
         """
         db_config = self.request_data.db_config
         if db_config is None:
-            db_config = getYaml('db')
+            db_config = get_yaml('db')
 
         return DatabaseOper(db_config, database)
 
@@ -152,21 +170,21 @@ class ExcelRunOper:
 
         variables = self._key_is_exist('variables', afters_conf)
         if variables is not None:
-            dependFielValues = self.getDependFieldValues(result.text, variables)
+            dependFielValues = self.get_depend_field_values(result.text,
+                                                            variables)
             for key, value in dependFielValues.items():
-                self.request_data.replaceVariable(key, value)
+                self.request_data.replace_variable(key, value)
             afters_conf = self.request_data.after
 
         executes = self._key_is_exist("db_executes", body=afters_conf)
 
         if executes is not None:
             for execute in executes:
-                db = self.dbExecute(self._key_is_exist("name", execute))
+                db = self.db_execute(self._key_is_exist("name", execute))
                 sqls = self._key_is_exist('sql', execute)
                 if sqls is not None:
                     for sql in sqls:
                         query_res = db.run_sql(sql)
-                        print("query result : %s \n" % query_res)
 
     def _key_is_exist(self, key, body):
         return self.request_data.key_is_exist(key, body=body)
@@ -184,7 +202,7 @@ if __name__ == '__main__':
     }
 
     excelRun = ExcelRunOper(row_data)
-    excelRun.dependRun()
-    result = excelRun.runCase()
-    excelRun.assertExpectedResult(result)
+    excelRun.depend_run()
+    result = excelRun.run_case()
+    excelRun.assert_expected_result(result)
     excelRun.after_run(result)
