@@ -157,7 +157,7 @@ class ExcelRunOper:
                 self.request_data.replaceVariable(key, value)
             afters_conf = self.request_data.after
 
-        executes = self._key_is_exist("executes", body=afters_conf)
+        executes = self._key_is_exist("db_executes", body=afters_conf)
 
         if executes is not None:
             for execute in executes:

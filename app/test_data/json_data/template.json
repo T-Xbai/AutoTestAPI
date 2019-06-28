@@ -30,21 +30,19 @@
     "$.username": "13681950786",
     "isContains": "hello"
   },
-
   "db_config": {
     "db_type": "mysql",
     "username": "root",
     "password": "root",
     "host": ""
   },
-
   "after": {
     "variables": {
       "user_id": "$.id",
       "user_name": "$.name",
       "user_key": "^h(*.?)o"
     },
-    "executes": [
+    "db_executes": [
       {
         "name": "data_base",
         "sql": [
