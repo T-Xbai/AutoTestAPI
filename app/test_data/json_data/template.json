@@ -1,6 +1,6 @@
 {
-  "url": "http://www.baidu.com",
-  "method": "GET",
+  "url": "{{ url }}/member/butler_login.do",
+  "method": "POST",
   "headers": {
     "content-type": "application/json"
   },
@@ -34,7 +34,8 @@
   "db_config": {
     "db_type": "mysql",
     "username": "root",
-    "password": "root"
+    "password": "root",
+    "host": ""
   },
 
   "after": {

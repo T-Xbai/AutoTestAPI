@@ -1,16 +1,16 @@
 # -- coding: utf-8 --
+import json
+
+from jsonpath import jsonpath
 from requests import Response
 
+from app.exception.execption import FormatError, ExperError
 from app.oper.database_oper import DatabaseOper
 from app.teamplate.excel_template import *
-from app.utils.http_request_util import HttpRequestUtils as httpRequest
-from app.utils.mysql_util import MysqlUtil
-from app.utils.read_json_util import ReadJsonUtils
-from app.utils.excel_util import ExcelUtil
-from app.exception.execption import FormatError, ExperError
 from app.utils.common_util import getYaml
-from jsonpath import jsonpath
-import json
+from app.utils.excel_util import ExcelUtil
+from app.utils.http_request_util import HttpRequestUtils as httpRequest
+from app.utils.read_json_util import ReadJsonUtils
 
 
 class ExcelRunOper:
