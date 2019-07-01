@@ -1,5 +1,5 @@
 from flask import Flask, request, jsonify
-import json
+from datetime import datetime
 
 app = Flask(__name__)
 
@@ -33,7 +33,8 @@ def butler_login():
 def update_file():
     f = request.files['file']
     print(request.headers)
-    f.save('upload/image.png')
+    file_path = 'upload/%s.png' % datetime.utcnow()
+    f.save(file_path)
     return "is ok"
 
 
