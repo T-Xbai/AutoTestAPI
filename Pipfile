@@ -16,6 +16,9 @@ flask = "*"
 jsonpath = "*"
 pymysql = "*"
 allure-pytest = "*"
+flask-sqlalchemy = "*"
+mysqlclient = "*"
+marshmallow = "*"
 
 [requires]
 python_version = "3.7"

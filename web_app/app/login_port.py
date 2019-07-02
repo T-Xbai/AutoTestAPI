@@ -1,12 +1,18 @@
-from flask import Flask, request, jsonify
+from flask import request, jsonify
+from web_app.app import app,db
 from datetime import datetime
 
-app = Flask(__name__)
+from web_app.app.models import User, UserSchema
+
+import json
 
 
 @app.route('/getUserPassword', methods=["GET"])
 def getUserPassword():
-    return jsonify({"mobile": "SDGKA72", "password": "sdg123"})
+    users = User.query.all()
+    schema = UserSchema(many=True)
+    results = schema.dump(users)
+    return jsonify(results.data)
 
 
 @app.route('/member/butler_login.do', methods=['POST'])
@@ -43,5 +49,9 @@ def index():
     return 'hello flask'
 
 
+
 if __name__ == '__main__':
+    db.create_all()
     app.run(host='0.0.0.0', port=5000)
+
+
